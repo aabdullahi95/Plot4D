@@ -20,7 +20,17 @@ class Frame2D:
 def _evaluate(func, frame:Frame2D, z):
     x = np.linspace(frame.xmin, frame.xmax, frame.xnum)
     y = np.linspace(frame.ymin, frame.ymax, frame.ynum)
-    w = np.array([func(i,j,z) for j in y for i in x])
+    w = []
+    
+    for j in y:
+        for i in x:
+            try:
+                w.append(func(i,j,z))
+            except ValueError:
+                continue
+
+    w = np.array(w)
+
     return x, y, w
 
 def _plot(x, y, w, frame, z_plot, z_label, wbounds=None, color_num=21, path=None, func_name=None, show=True):
