@@ -21,12 +21,12 @@ def _evaluate(func, frame:Frame2D, z):
     x = np.linspace(frame.xmin, frame.xmax, frame.xnum)
     y = np.linspace(frame.ymin, frame.ymax, frame.ynum)
     mask = np.ones((frame.xnum, frame.xnum), dtype=bool)
-    w = []
+    w = np.full((frame.xnum, frame.xnum), None)
 
     for i, xi in enumerate(x):
         for j, yj in enumerate(y):
             try:
-                w.append(func(xi, yj, z))
+                w[j][i] = func(xi, yj, z)
             except ValueError:
                 mask[j][i]=False
                 continue
@@ -40,7 +40,6 @@ def _plot(x, y, w, mask, frame, z_plot, z_label, wbounds=None, color_num=21, pat
     X, Y = np.meshgrid(x, y)
     Y_ma = np.where(mask, Y, None)
     X_ma = np.where(mask, X, None)
-    #W = w.reshape(frame.xnum, frame.ynum)
     
     if wbounds == None:
         wbounds = (w.min(), w.max())
