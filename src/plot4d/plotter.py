@@ -38,8 +38,8 @@ def _evaluate(func, frame:Frame2D, z):
 def _plot(x, y, w, mask, frame, z_plot, z_label, wbounds=None, color_num=21, path=None, func_name=None, show=True):
     # Save plot if path is set, show plot if show==True. Otherwise do nothing and return nothing. 
     X, Y = np.meshgrid(x, y)
-    Y_ma = np.where(mask, Y, np.inf)
-    X_ma = np.where(mask, X, np.inf)
+    Y_ma = np.where(mask, Y, None)
+    X_ma = np.where(mask, X, None)
     
     if wbounds == None:
         wbounds = (w.min(), w.max())
