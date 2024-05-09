@@ -26,7 +26,7 @@ def _evaluate(func, frame:Frame2D, z):
     for i, xi in enumerate(x):
         for j, yj in enumerate(y):
             try:
-                w.append(func(x, y, z))
+                w.append(func(xi, yj, z))
             except ValueError:
                 mask[j][i]=False
                 continue
