@@ -122,7 +122,7 @@ def plot4d(func, z_values, path="", wbounds=None, frame=Frame2D(), save_images=F
     else:
         for z in z_values:
             x, y, w = _evaluate(func, frame, z)
-            fn = _plot(x, y, w, frame, z, z_label, (wmin, wmax), color_num, png_path, func_name, show=False)
+            fn = _plot(x, y, w, frame, z, z_label, wbounds, color_num, png_path, func_name, show=False)
             filenames.append(fn)
     
     gif_name = "Cross Sections" if func_name==None else func_name
