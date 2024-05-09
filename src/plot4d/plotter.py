@@ -20,7 +20,7 @@ class Frame2D:
 def _evaluate(func, frame:Frame2D, z):
     x = np.linspace(frame.xmin, frame.xmax, frame.xnum)
     y = np.linspace(frame.ymin, frame.ymax, frame.ynum)
-    w = np.full((frame.xnum, frame.xnum), 0.00)
+    w = np.full((frame.xnum, frame.xnum), np.nan)
 
     for i, xi in enumerate(x):
         for j, yj in enumerate(y):
@@ -39,12 +39,14 @@ def _plot(x, y, w, frame, z_plot, z_label, wbounds=None, color_num=50, path=None
     W = w.reshape(frame.xnum, frame.ynum)
 
     if wbounds == None:
-        wbounds = (W.min(), W.max())
+        wbounds = (np.nanmin(W), np.nanmax(W))
     wmin, wmax = wbounds
     levels = np.linspace(wmin, wmax, color_num)
     img=plt.contourf(X, Y, W, levels=levels)
     plt.colorbar(img)
     
+    plt.ylim(-1.1, 1.1)
+    plt.ylim(-0.1, 1.1)
     plt.xlabel(frame.xlabel)
     plt.ylabel(frame.ylabel)
     if func_name == None:
