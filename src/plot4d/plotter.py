@@ -46,7 +46,7 @@ def _plot(x, y, w, frame, z_plot, z_label, wbounds=None, color_num=50, path=None
     plt.colorbar(img)
     
     plt.ylim(-1.1, 1.1)
-    plt.ylim(-0.1, 1.1)
+    plt.xlim(-0.1, 1.1)
     plt.xlabel(frame.xlabel)
     plt.ylabel(frame.ylabel)
     if func_name == None:
