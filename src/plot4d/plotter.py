@@ -20,32 +20,29 @@ class Frame2D:
 def _evaluate(func, frame:Frame2D, z):
     x = np.linspace(frame.xmin, frame.xmax, frame.xnum)
     y = np.linspace(frame.ymin, frame.ymax, frame.ynum)
-    mask = np.ones((frame.xnum, frame.xnum), dtype=bool)
-    w = np.full((frame.xnum, frame.xnum), 0.0)
+    w = np.full((frame.xnum, frame.xnum), -np.inf)
 
     for i, xi in enumerate(x):
         for j, yj in enumerate(y):
             try:
                 w[j][i] = func(xi, yj, z)
             except ValueError:
-                mask[j][i]=False
                 continue
 
     w = np.array(w)
 
-    return x, y, w, mask
+    return x, y, w
 
-def _plot(x, y, w, mask, frame, z_plot, z_label, wbounds=None, color_num=21, path=None, func_name=None, show=True):
+def _plot(x, y, w, frame, z_plot, z_label, wbounds=None, color_num=50, path=None, func_name=None, show=True):
     # Save plot if path is set, show plot if show==True. Otherwise do nothing and return nothing. 
     X, Y = np.meshgrid(x, y)
-    #Y_ma = np.where(mask, Y, 0)
-    #X_ma = np.where(mask, X, 0)
-    
+    W = w.reshape(frame.xnum, frame.ynum)
+
     if wbounds == None:
-        wbounds = (w.min(), w.max())
+        wbounds = (W.min(), W.max())
     wmin, wmax = wbounds
     levels = np.linspace(wmin, wmax, color_num)
-    img=plt.contourf(X, Y, w, levels=levels)
+    img=plt.contourf(X, Y, W, levels=levels)
     plt.colorbar(img)
     
     plt.xlabel(frame.xlabel)
@@ -83,8 +80,8 @@ def plot4d_CS(func, z_plot, z_label='z', frame=Frame2D(), wbounds=None, color_nu
     Returns:
         None
     """
-    x, y, w, mask = _evaluate(func, frame, z_plot)
-    _plot(x, y, w, mask, frame, z_plot, z_label, wbounds, color_num, path, func_name)
+    x, y, w = _evaluate(func, frame, z_plot)
+    _plot(x, y, w, frame, z_plot, z_label, wbounds, color_num, path, func_name)
 
 def plot4d(func, z_values, path="", wbounds=None, frame=Frame2D(), save_images=False, color_num = 21, fps=1, func_name=None, z_label='z', png_path=None):
     """Plot a 4D function w(x,y,z) by crosssections and create a gif for it. 
@@ -114,18 +111,18 @@ def plot4d(func, z_values, path="", wbounds=None, frame=Frame2D(), save_images=F
         wmin = +float('inf')
         wmax = -float('inf')
         for z in z_values:
-            x, y, w, mask = _evaluate(func, frame, z)
+            x, y, w = _evaluate(func, frame, z)
             wmin = min(wmin, w.min())
             wmax = max(wmax, w.max())
-            values.append((x,y,w,mask,z))
+            values.append((x,y,w,z))
         
-        for x,y,w,mask,z in values:
-            fn = _plot(x, y, w, mask, frame, z, z_label, (wmin, wmax), color_num, png_path, func_name, show=False)
+        for x,y,w,z in values:
+            fn = _plot(x, y, w, frame, z, z_label, (wmin, wmax), color_num, png_path, func_name, show=False)
             filenames.append(fn)
     else:
         for z in z_values:
-            x, y, w, mask = _evaluate(func, frame, z)
-            fn = _plot(x, y, w, mask, frame, z, z_label, (wmin, wmax), color_num, png_path, func_name, show=False)
+            x, y, w = _evaluate(func, frame, z)
+            fn = _plot(x, y, w, frame, z, z_label, (wmin, wmax), color_num, png_path, func_name, show=False)
             filenames.append(fn)
     
     gif_name = "Cross Sections" if func_name==None else func_name
