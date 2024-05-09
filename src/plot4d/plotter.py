@@ -20,7 +20,7 @@ class Frame2D:
 def _evaluate(func, frame:Frame2D, z):
     x = np.linspace(frame.xmin, frame.xmax, frame.xnum)
     y = np.linspace(frame.ymin, frame.ymax, frame.ynum)
-    mask = np.ones((len(frame.xnum), len(frame.ynum)), dtype=bool)
+    mask = np.ones((frame.xnum, frame.xnum), dtype=bool)
     w = []
 
     for i, xi in enumerate(x):
