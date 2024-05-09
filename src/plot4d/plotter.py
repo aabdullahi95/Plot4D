@@ -21,7 +21,7 @@ def _evaluate(func, frame:Frame2D, z):
     x = np.linspace(frame.xmin, frame.xmax, frame.xnum)
     y = np.linspace(frame.ymin, frame.ymax, frame.ynum)
     mask = np.ones((frame.xnum, frame.xnum), dtype=bool)
-    w = np.full((frame.xnum, frame.xnum), 0)
+    w = np.full((frame.xnum, frame.xnum), 0.0)
 
     for i, xi in enumerate(x):
         for j, yj in enumerate(y):
@@ -38,14 +38,14 @@ def _evaluate(func, frame:Frame2D, z):
 def _plot(x, y, w, mask, frame, z_plot, z_label, wbounds=None, color_num=21, path=None, func_name=None, show=True):
     # Save plot if path is set, show plot if show==True. Otherwise do nothing and return nothing. 
     X, Y = np.meshgrid(x, y)
-    Y_ma = np.where(mask, Y, 0)
-    X_ma = np.where(mask, X, 0)
+    #Y_ma = np.where(mask, Y, 0)
+    #X_ma = np.where(mask, X, 0)
     
     if wbounds == None:
         wbounds = (w.min(), w.max())
     wmin, wmax = wbounds
     levels = np.linspace(wmin, wmax, color_num)
-    img=plt.contourf(X_ma, Y_ma, w, levels=levels)
+    img=plt.contourf(X, Y, w, levels=levels)
     plt.colorbar(img)
     
     plt.xlabel(frame.xlabel)
