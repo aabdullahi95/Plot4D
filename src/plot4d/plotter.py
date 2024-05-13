@@ -1,6 +1,7 @@
 import os
 from typing import Optional
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 plt.rcParams['figure.dpi']=200
 import numpy as np
 import imageio
@@ -42,7 +43,8 @@ def _plot(x, y, w, frame, z_plot, z_label, wbounds=None, color_num=50, path=None
         wbounds = (np.nanmin(W), np.nanmax(W))
     wmin, wmax = wbounds
     levels = np.linspace(wmin, wmax, color_num)
-    img=plt.contourf(X, Y, W, levels=levels)
+    img=plt.contourf(X, Y, W, locator=ticker.LogLocator())
+    #img=plt.contourf(X, Y, W, levels=levels)
     plt.colorbar(img)
    
     plt.xlabel(frame.xlabel)
